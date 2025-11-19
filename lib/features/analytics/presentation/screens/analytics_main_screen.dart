@@ -4,9 +4,11 @@ import '../widgets/date_range_filter.dart';
 import 'timeline_analytics_screen.dart';
 import 'learn_analytics_screen.dart';
 import 'conversation_analytics_screen.dart';
+import 'sentiment_analytics_screen.dart';
 import '../../domain/timeline_analytics_providers.dart';
 import '../../domain/learn_analytics_providers.dart';
 import '../../domain/conversation_analytics_providers.dart';
+import '../../domain/sentiment_analytics_providers.dart';
 
 class AnalyticsMainScreen extends ConsumerStatefulWidget {
   const AnalyticsMainScreen({super.key});
@@ -22,7 +24,7 @@ class _AnalyticsMainScreenState extends ConsumerState<AnalyticsMainScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -63,6 +65,10 @@ class _AnalyticsMainScreenState extends ConsumerState<AnalyticsMainScreen>
               icon: Icon(Icons.message),
               text: 'گفتگوها',
             ),
+            Tab(
+              icon: Icon(Icons.psychology),
+              text: 'احساسات',
+            ),
           ],
         ),
       ),
@@ -72,6 +78,7 @@ class _AnalyticsMainScreenState extends ConsumerState<AnalyticsMainScreen>
           TimelineAnalyticsScreen(),
           LearnAnalyticsScreen(),
           ConversationAnalyticsScreen(),
+          SentimentAnalyticsScreen(),
         ],
       ),
     );
@@ -88,6 +95,9 @@ class _AnalyticsMainScreenState extends ConsumerState<AnalyticsMainScreen>
         break;
       case 2:
         ref.invalidate(conversationAnalyticsProvider);
+        break;
+      case 3:
+        ref.invalidate(sentimentAnalyticsProvider);
         break;
     }
   }
