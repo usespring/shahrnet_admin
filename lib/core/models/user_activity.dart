@@ -65,6 +65,13 @@ class UserStats {
   final int totalComments;
   final int totalPostViews;
   final int totalSurveys;
+  final int? totalDirectMessages;
+  final int? totalGroupMessages;
+  final int? totalAudioCalls;
+  final int? totalVideoConferences;
+  final int? totalCoursesCompleted;
+  final int? totalCoursesInProgress;
+  final double? averageCourseScore;
   final DateTime? lastActiveAt;
 
   const UserStats({
@@ -76,11 +83,25 @@ class UserStats {
     required this.totalComments,
     required this.totalPostViews,
     required this.totalSurveys,
+    this.totalDirectMessages,
+    this.totalGroupMessages,
+    this.totalAudioCalls,
+    this.totalVideoConferences,
+    this.totalCoursesCompleted,
+    this.totalCoursesInProgress,
+    this.averageCourseScore,
     this.lastActiveAt,
   });
 
   int get totalActivity =>
-      totalPosts + totalLikes + totalComments + totalPostViews + totalSurveys;
+      totalPosts + totalLikes + totalComments + totalPostViews + totalSurveys +
+      (totalDirectMessages ?? 0) + (totalGroupMessages ?? 0) +
+      (totalAudioCalls ?? 0) + (totalVideoConferences ?? 0) +
+      (totalCoursesCompleted ?? 0) + (totalCoursesInProgress ?? 0);
+
+  int get totalMessages => (totalDirectMessages ?? 0) + (totalGroupMessages ?? 0);
+  int get totalCalls => (totalAudioCalls ?? 0) + (totalVideoConferences ?? 0);
+  int get totalCourses => (totalCoursesCompleted ?? 0) + (totalCoursesInProgress ?? 0);
 
   factory UserStats.fromJson(Map<String, dynamic> json) {
     return UserStats(
@@ -92,6 +113,13 @@ class UserStats {
       totalComments: json['totalComments'] as int,
       totalPostViews: json['totalPostViews'] as int,
       totalSurveys: json['totalSurveys'] as int,
+      totalDirectMessages: (json['totalDirectMessages'] as int?) ?? 0,
+      totalGroupMessages: (json['totalGroupMessages'] as int?) ?? 0,
+      totalAudioCalls: (json['totalAudioCalls'] as int?) ?? 0,
+      totalVideoConferences: (json['totalVideoConferences'] as int?) ?? 0,
+      totalCoursesCompleted: (json['totalCoursesCompleted'] as int?) ?? 0,
+      totalCoursesInProgress: (json['totalCoursesInProgress'] as int?) ?? 0,
+      averageCourseScore: (json['averageCourseScore'] as num?)?.toDouble() ?? 0.0,
       lastActiveAt: json['lastActiveAt'] != null
           ? DateTime.parse(json['lastActiveAt'] as String)
           : null,
@@ -108,6 +136,13 @@ class UserStats {
       'totalComments': totalComments,
       'totalPostViews': totalPostViews,
       'totalSurveys': totalSurveys,
+      'totalDirectMessages': totalDirectMessages,
+      'totalGroupMessages': totalGroupMessages,
+      'totalAudioCalls': totalAudioCalls,
+      'totalVideoConferences': totalVideoConferences,
+      'totalCoursesCompleted': totalCoursesCompleted,
+      'totalCoursesInProgress': totalCoursesInProgress,
+      'averageCourseScore': averageCourseScore,
       'lastActiveAt': lastActiveAt?.toIso8601String(),
     };
   }

@@ -128,6 +128,13 @@ class MockAnalyticsData {
           'totalComments': 0,
           'totalPostViews': 0,
           'totalSurveys': 0,
+          'totalDirectMessages': 0,
+          'totalGroupMessages': 0,
+          'totalAudioCalls': 0,
+          'totalVideoConferences': 0,
+          'totalCoursesCompleted': 0,
+          'totalCoursesInProgress': 0,
+          'averageCourseScore': 0.0,
           'lastActiveAt': activity.timestamp,
         },
       );
@@ -158,6 +165,20 @@ class MockAnalyticsData {
       }
     }
 
+    // Add random conversation and learning data for each user
+    for (final stats in userStatsMap.values) {
+      // Conversation activities
+      stats['totalDirectMessages'] = 20 + _random.nextInt(80);
+      stats['totalGroupMessages'] = 10 + _random.nextInt(40);
+      stats['totalAudioCalls'] = _random.nextInt(15);
+      stats['totalVideoConferences'] = _random.nextInt(10);
+
+      // Learning activities
+      stats['totalCoursesCompleted'] = _random.nextInt(8);
+      stats['totalCoursesInProgress'] = _random.nextInt(4);
+      stats['averageCourseScore'] = 60.0 + _random.nextDouble() * 35;
+    }
+
     return userStatsMap.values
         .map((data) => UserStats(
               userId: data['userId'] as String,
@@ -167,6 +188,13 @@ class MockAnalyticsData {
               totalComments: data['totalComments'] as int,
               totalPostViews: data['totalPostViews'] as int,
               totalSurveys: data['totalSurveys'] as int,
+              totalDirectMessages: data['totalDirectMessages'] as int,
+              totalGroupMessages: data['totalGroupMessages'] as int,
+              totalAudioCalls: data['totalAudioCalls'] as int,
+              totalVideoConferences: data['totalVideoConferences'] as int,
+              totalCoursesCompleted: data['totalCoursesCompleted'] as int,
+              totalCoursesInProgress: data['totalCoursesInProgress'] as int,
+              averageCourseScore: data['averageCourseScore'] as double,
               lastActiveAt: data['lastActiveAt'] as DateTime,
             ))
         .toList();

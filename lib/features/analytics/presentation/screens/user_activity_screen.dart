@@ -126,12 +126,21 @@ class _UserActivityScreenState extends ConsumerState<UserActivityScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 4),
-            Text(
-              'کل فعالیت‌ها: ${user.totalActivity}',
-              style: const TextStyle(fontSize: 12),
+            Wrap(
+              spacing: 12,
+              runSpacing: 4,
+              children: [
+                _buildCompactStat('${user.totalActivity}', 'کل فعالیت‌ها'),
+                if (user.totalMessages > 0)
+                  _buildCompactStat('${user.totalMessages}', 'پیام'),
+                if (user.totalCourses > 0)
+                  _buildCompactStat('${user.totalCourses}', 'دوره'),
+                if (user.totalCalls > 0)
+                  _buildCompactStat('${user.totalCalls}', 'تماس'),
+              ],
             ),
             if (user.lastActiveAt != null) ...[
-              const SizedBox(height: 2),
+              const SizedBox(height: 4),
               Text(
                 'آخرین فعالیت: ${_formatDate(user.lastActiveAt!)}',
                 style: TextStyle(
@@ -146,7 +155,18 @@ class _UserActivityScreenState extends ConsumerState<UserActivityScreen> {
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Timeline Activities
+                Text(
+                  'فعالیت‌های تایم‌لاین',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    color: Colors.grey[700],
+                  ),
+                ),
+                const SizedBox(height: 12),
                 _buildActivityRow(
                   'پست‌ها',
                   user.totalPosts,
@@ -180,6 +200,79 @@ class _UserActivityScreenState extends ConsumerState<UserActivityScreen> {
                   user.totalSurveys,
                   Icons.poll,
                   Colors.purple,
+                ),
+
+                const Divider(height: 32),
+
+                // Conversation Activities
+                Text(
+                  'فعالیت‌های گفتگو',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    color: Colors.grey[700],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                _buildActivityRow(
+                  'پیام‌های مستقیم',
+                  user.totalDirectMessages ?? 0,
+                  Icons.person,
+                  Colors.blue,
+                ),
+                const SizedBox(height: 8),
+                _buildActivityRow(
+                  'پیام‌های گروهی',
+                  user.totalGroupMessages ?? 0,
+                  Icons.group,
+                  Colors.green,
+                ),
+                const SizedBox(height: 8),
+                _buildActivityRow(
+                  'تماس‌های صوتی',
+                  user.totalAudioCalls ?? 0,
+                  Icons.phone,
+                  Colors.orange,
+                ),
+                const SizedBox(height: 8),
+                _buildActivityRow(
+                  'ویدئو کنفرانس',
+                  user.totalVideoConferences ?? 0,
+                  Icons.videocam,
+                  Colors.red,
+                ),
+
+                const Divider(height: 32),
+
+                // Learning Activities
+                Text(
+                  'فعالیت‌های آموزشی',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    color: Colors.grey[700],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                _buildActivityRow(
+                  'دوره‌های تکمیل شده',
+                  user.totalCoursesCompleted ?? 0,
+                  Icons.check_circle,
+                  Colors.green,
+                ),
+                const SizedBox(height: 8),
+                _buildActivityRow(
+                  'دوره‌های در حال اجرا',
+                  user.totalCoursesInProgress ?? 0,
+                  Icons.play_circle,
+                  Colors.blue,
+                ),
+                const SizedBox(height: 8),
+                _buildScoreRow(
+                  'میانگین نمره',
+                  user.averageCourseScore ?? 0.0,
+                  Icons.grade,
+                  _getScoreColor(user.averageCourseScore ?? 0.0),
                 ),
               ],
             ),
@@ -231,6 +324,81 @@ class _UserActivityScreenState extends ConsumerState<UserActivityScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildScoreRow(
+    String label,
+    double score,
+    IconData icon,
+    Color color,
+  ) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, color: color, size: 20),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            label,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Text(
+            '${score.toStringAsFixed(1)}/۱۰۰',
+            style: TextStyle(
+              color: color,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Color _getScoreColor(double score) {
+    if (score >= 90) return Colors.green;
+    if (score >= 75) return Colors.blue;
+    if (score >= 60) return Colors.orange;
+    return Colors.red;
+  }
+
+  Widget _buildCompactStat(String value, String label) {
+    return RichText(
+      text: TextSpan(
+        style: const TextStyle(fontSize: 12),
+        children: [
+          TextSpan(
+            text: value,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          TextSpan(
+            text: ' $label',
+            style: TextStyle(
+              color: Colors.grey[600],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
