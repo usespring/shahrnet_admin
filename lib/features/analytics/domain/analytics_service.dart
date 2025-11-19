@@ -119,6 +119,40 @@ class AnalyticsService {
         .toList();
   }
 
+  /// دریافت داده‌های سری زمانی برای یک کاربر خاص بر اساس بخش
+  Future<Map<String, List<TimeSeriesData>>> getUserActivityTrends({
+    required String userId,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 400));
+
+    final activities = await getUserActivities(
+      startDate: startDate,
+      endDate: endDate,
+    );
+
+    // Filter activities for this user
+    final userActivities = activities.where((a) => a.userId == userId).toList();
+
+    if (userActivities.isEmpty) {
+      return {};
+    }
+
+    // Calculate start and end dates from activities if not provided
+    final actualStartDate = startDate ??
+        userActivities.map((a) => a.timestamp).reduce((a, b) => a.isBefore(b) ? a : b);
+    final actualEndDate = endDate ??
+        userActivities.map((a) => a.timestamp).reduce((a, b) => a.isAfter(b) ? a : b);
+
+    return MockAnalyticsData.generateUserActivityTrends(
+      userId: userId,
+      activities: userActivities,
+      startDate: actualStartDate,
+      endDate: actualEndDate,
+    );
+  }
+
   /// پاک کردن کش
   void clearCache() {
     _cachedActivities = null;

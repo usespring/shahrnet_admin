@@ -208,7 +208,7 @@ class ManagerSupportListScreen extends ConsumerWidget {
                         spacing: 4,
                         runSpacing: 4,
                         children: manager.strengths
-                            .map((s) => Chip(
+                            .map<Widget>((s) => Chip(
                                   label: Text(s),
                                   backgroundColor: Colors.green[50],
                                   labelStyle: const TextStyle(fontSize: 11),
@@ -234,7 +234,7 @@ class ManagerSupportListScreen extends ConsumerWidget {
                         spacing: 4,
                         runSpacing: 4,
                         children: manager.improvementAreas
-                            .map((s) => Chip(
+                            .map<Widget>((s) => Chip(
                                   label: Text(s),
                                   backgroundColor: Colors.orange[50],
                                   labelStyle: const TextStyle(fontSize: 11),

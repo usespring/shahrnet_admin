@@ -304,6 +304,112 @@ class MockAnalyticsData {
     );
   }
 
+  /// تولید داده‌های سری زمانی برای فعالیت‌های یک کاربر بر اساس بخش‌ها
+  static Map<String, List<TimeSeriesData>> generateUserActivityTrends({
+    required String userId,
+    required List<UserActivity> activities,
+    required DateTime startDate,
+    required DateTime endDate,
+  }) {
+    final trends = <String, Map<DateTime, double>>{};
+
+    // Initialize all sections with data points
+    final sections = <String>{
+      'timeline_posts',
+      'timeline_likes',
+      'timeline_comments',
+      'timeline_views',
+      'timeline_surveys',
+      'conversation_direct',
+      'conversation_group',
+      'conversation_audio',
+      'conversation_video',
+      'learning_completed',
+      'learning_inprogress',
+    };
+
+    // Initialize all days with 0 for each section
+    var currentDate = DateTime(startDate.year, startDate.month, startDate.day);
+    final end = DateTime(endDate.year, endDate.month, endDate.day);
+
+    for (final section in sections) {
+      trends[section] = {};
+      var date = DateTime(startDate.year, startDate.month, startDate.day);
+      while (date.isBefore(end) || date.isAtSameMomentAs(end)) {
+        trends[section]![date] = 0;
+        date = date.add(const Duration(days: 1));
+      }
+    }
+
+    // Count activities per day for timeline activities
+    for (final activity in activities.where((a) => a.userId == userId)) {
+      final date = DateTime(
+        activity.timestamp.year,
+        activity.timestamp.month,
+        activity.timestamp.day,
+      );
+
+      String? sectionKey;
+      switch (activity.type) {
+        case ActivityType.postComposed:
+          sectionKey = 'timeline_posts';
+          break;
+        case ActivityType.postLiked:
+          sectionKey = 'timeline_likes';
+          break;
+        case ActivityType.postCommented:
+          sectionKey = 'timeline_comments';
+          break;
+        case ActivityType.postVisited:
+          sectionKey = 'timeline_views';
+          break;
+        case ActivityType.surveyParticipated:
+          sectionKey = 'timeline_surveys';
+          break;
+      }
+
+      if (sectionKey != null && trends[sectionKey]!.containsKey(date)) {
+        trends[sectionKey]![date] = trends[sectionKey]![date]! + 1;
+      }
+    }
+
+    // Generate synthetic data for conversation and learning activities
+    // Using deterministic random based on userId for consistency
+    final userSeed = userId.hashCode;
+    final userRandom = Random(userSeed);
+
+    currentDate = DateTime(startDate.year, startDate.month, startDate.day);
+    while (currentDate.isBefore(end) || currentDate.isAtSameMomentAs(end)) {
+      // Conversation activities - varying patterns
+      trends['conversation_direct']![currentDate] =
+          (userRandom.nextDouble() * 5 + userRandom.nextDouble() * 3).roundToDouble();
+      trends['conversation_group']![currentDate] =
+          (userRandom.nextDouble() * 3 + userRandom.nextDouble() * 2).roundToDouble();
+      trends['conversation_audio']![currentDate] =
+          userRandom.nextDouble() < 0.3 ? (userRandom.nextDouble() * 2).roundToDouble() : 0;
+      trends['conversation_video']![currentDate] =
+          userRandom.nextDouble() < 0.2 ? (userRandom.nextDouble() * 1.5).roundToDouble() : 0;
+
+      // Learning activities - progressive patterns
+      final dayProgress = currentDate.difference(startDate).inDays;
+      trends['learning_completed']![currentDate] =
+          userRandom.nextDouble() < 0.15 ? 1 : 0;
+      trends['learning_inprogress']![currentDate] =
+          (1 + (dayProgress / 10) * userRandom.nextDouble()).clamp(0, 3).roundToDouble();
+
+      currentDate = currentDate.add(const Duration(days: 1));
+    }
+
+    // Convert to TimeSeriesData
+    return trends.map((section, dataPoints) {
+      final seriesData = dataPoints.entries
+          .map((entry) => TimeSeriesData(date: entry.key, value: entry.value))
+          .toList()
+        ..sort((a, b) => a.date.compareTo(b.date));
+      return MapEntry(section, seriesData);
+    });
+  }
+
   static String _getActivityTypePersianName(ActivityType type) {
     switch (type) {
       case ActivityType.postComposed:

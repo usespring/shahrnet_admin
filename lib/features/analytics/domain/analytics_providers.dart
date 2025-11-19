@@ -147,3 +147,16 @@ final userStatsProvider = FutureProvider.autoDispose<List<UserStats>>((ref) asyn
   final service = ref.watch(analyticsServiceProvider);
   return service.getUserStats();
 });
+
+// User activity trends provider (per user)
+final userActivityTrendsProvider = FutureProvider.autoDispose
+    .family<Map<String, List<TimeSeriesData>>, String>((ref, userId) async {
+  final service = ref.watch(analyticsServiceProvider);
+  final dateRange = ref.watch(dateRangeProvider);
+
+  return service.getUserActivityTrends(
+    userId: userId,
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+  );
+});

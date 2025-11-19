@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 import '../../../../core/models/user_activity.dart';
 import '../../domain/analytics_providers.dart';
+import '../widgets/activity_trend_chart.dart';
 
 class UserActivityScreen extends ConsumerStatefulWidget {
   const UserActivityScreen({super.key});
@@ -152,132 +153,238 @@ class _UserActivityScreenState extends ConsumerState<UserActivityScreen> {
           ],
         ),
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Timeline Activities
-                Text(
-                  'فعالیت‌های تایم‌لاین',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                    color: Colors.grey[700],
-                  ),
-                ),
-                const SizedBox(height: 12),
-                _buildActivityRow(
-                  'پست‌ها',
-                  user.totalPosts,
-                  Icons.article,
-                  Colors.blue,
-                ),
-                const SizedBox(height: 8),
-                _buildActivityRow(
-                  'لایک‌ها',
-                  user.totalLikes,
-                  Icons.favorite,
-                  Colors.red,
-                ),
-                const SizedBox(height: 8),
-                _buildActivityRow(
-                  'نظرات',
-                  user.totalComments,
-                  Icons.comment,
-                  Colors.green,
-                ),
-                const SizedBox(height: 8),
-                _buildActivityRow(
-                  'بازدیدها',
-                  user.totalPostViews,
-                  Icons.visibility,
-                  Colors.orange,
-                ),
-                const SizedBox(height: 8),
-                _buildActivityRow(
-                  'نظرسنجی‌ها',
-                  user.totalSurveys,
-                  Icons.poll,
-                  Colors.purple,
-                ),
-
-                const Divider(height: 32),
-
-                // Conversation Activities
-                Text(
-                  'فعالیت‌های گفتگو',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                    color: Colors.grey[700],
-                  ),
-                ),
-                const SizedBox(height: 12),
-                _buildActivityRow(
-                  'پیام‌های مستقیم',
-                  user.totalDirectMessages ?? 0,
-                  Icons.person,
-                  Colors.blue,
-                ),
-                const SizedBox(height: 8),
-                _buildActivityRow(
-                  'پیام‌های گروهی',
-                  user.totalGroupMessages ?? 0,
-                  Icons.group,
-                  Colors.green,
-                ),
-                const SizedBox(height: 8),
-                _buildActivityRow(
-                  'تماس‌های صوتی',
-                  user.totalAudioCalls ?? 0,
-                  Icons.phone,
-                  Colors.orange,
-                ),
-                const SizedBox(height: 8),
-                _buildActivityRow(
-                  'ویدئو کنفرانس',
-                  user.totalVideoConferences ?? 0,
-                  Icons.videocam,
-                  Colors.red,
-                ),
-
-                const Divider(height: 32),
-
-                // Learning Activities
-                Text(
-                  'فعالیت‌های آموزشی',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                    color: Colors.grey[700],
-                  ),
-                ),
-                const SizedBox(height: 12),
-                _buildActivityRow(
-                  'دوره‌های تکمیل شده',
-                  user.totalCoursesCompleted ?? 0,
-                  Icons.check_circle,
-                  Colors.green,
-                ),
-                const SizedBox(height: 8),
-                _buildActivityRow(
-                  'دوره‌های در حال اجرا',
-                  user.totalCoursesInProgress ?? 0,
-                  Icons.play_circle,
-                  Colors.blue,
-                ),
-                const SizedBox(height: 8),
-                _buildScoreRow(
-                  'میانگین نمره',
-                  user.averageCourseScore ?? 0.0,
-                  Icons.grade,
-                  _getScoreColor(user.averageCourseScore ?? 0.0),
-                ),
-              ],
-            ),
-          ),
+          _buildUserDetailWithTrends(user),
         ],
+      ),
+    );
+  }
+
+  Widget _buildUserDetailWithTrends(UserStats user) {
+    final trendsAsync = ref.watch(userActivityTrendsProvider(user.userId));
+
+    return trendsAsync.when(
+      data: (trends) {
+        return Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Timeline Activities Section
+              Text(
+                'فعالیت‌های تایم‌لاین',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  color: Colors.grey[700],
+                ),
+              ),
+              const SizedBox(height: 12),
+              _buildActivityRow(
+                'پست‌ها',
+                user.totalPosts,
+                Icons.article,
+                Colors.blue,
+              ),
+              const SizedBox(height: 8),
+              if (trends['timeline_posts'] != null)
+                ActivityTrendChart(
+                  title: 'روند نوشتن پست در طول زمان',
+                  data: trends['timeline_posts']!,
+                  color: Colors.blue,
+                  icon: Icons.article,
+                ),
+              const SizedBox(height: 8),
+              _buildActivityRow(
+                'لایک‌ها',
+                user.totalLikes,
+                Icons.favorite,
+                Colors.red,
+              ),
+              const SizedBox(height: 8),
+              if (trends['timeline_likes'] != null)
+                ActivityTrendChart(
+                  title: 'روند پسندیدن پست‌ها در طول زمان',
+                  data: trends['timeline_likes']!,
+                  color: Colors.red,
+                  icon: Icons.favorite,
+                ),
+              const SizedBox(height: 8),
+              _buildActivityRow(
+                'نظرات',
+                user.totalComments,
+                Icons.comment,
+                Colors.green,
+              ),
+              const SizedBox(height: 8),
+              if (trends['timeline_comments'] != null)
+                ActivityTrendChart(
+                  title: 'روند نظر دادن در طول زمان',
+                  data: trends['timeline_comments']!,
+                  color: Colors.green,
+                  icon: Icons.comment,
+                ),
+              const SizedBox(height: 8),
+              _buildActivityRow(
+                'بازدیدها',
+                user.totalPostViews,
+                Icons.visibility,
+                Colors.orange,
+              ),
+              const SizedBox(height: 8),
+              if (trends['timeline_views'] != null)
+                ActivityTrendChart(
+                  title: 'روند بازدید پست‌ها در طول زمان',
+                  data: trends['timeline_views']!,
+                  color: Colors.orange,
+                  icon: Icons.visibility,
+                ),
+              const SizedBox(height: 8),
+              _buildActivityRow(
+                'نظرسنجی‌ها',
+                user.totalSurveys,
+                Icons.poll,
+                Colors.purple,
+              ),
+              const SizedBox(height: 8),
+              if (trends['timeline_surveys'] != null)
+                ActivityTrendChart(
+                  title: 'روند شرکت در نظرسنجی در طول زمان',
+                  data: trends['timeline_surveys']!,
+                  color: Colors.purple,
+                  icon: Icons.poll,
+                ),
+
+              const Divider(height: 32),
+
+              // Conversation Activities Section
+              Text(
+                'فعالیت‌های گفتگو',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  color: Colors.grey[700],
+                ),
+              ),
+              const SizedBox(height: 12),
+              _buildActivityRow(
+                'پیام‌های مستقیم',
+                user.totalDirectMessages ?? 0,
+                Icons.person,
+                Colors.blue,
+              ),
+              const SizedBox(height: 8),
+              if (trends['conversation_direct'] != null)
+                ActivityTrendChart(
+                  title: 'روند پیام‌های مستقیم در طول زمان',
+                  data: trends['conversation_direct']!,
+                  color: Colors.blue,
+                  icon: Icons.person,
+                ),
+              const SizedBox(height: 8),
+              _buildActivityRow(
+                'پیام‌های گروهی',
+                user.totalGroupMessages ?? 0,
+                Icons.group,
+                Colors.green,
+              ),
+              const SizedBox(height: 8),
+              if (trends['conversation_group'] != null)
+                ActivityTrendChart(
+                  title: 'روند پیام‌های گروهی در طول زمان',
+                  data: trends['conversation_group']!,
+                  color: Colors.green,
+                  icon: Icons.group,
+                ),
+              const SizedBox(height: 8),
+              _buildActivityRow(
+                'تماس‌های صوتی',
+                user.totalAudioCalls ?? 0,
+                Icons.phone,
+                Colors.orange,
+              ),
+              const SizedBox(height: 8),
+              if (trends['conversation_audio'] != null)
+                ActivityTrendChart(
+                  title: 'روند تماس‌های صوتی در طول زمان',
+                  data: trends['conversation_audio']!,
+                  color: Colors.orange,
+                  icon: Icons.phone,
+                ),
+              const SizedBox(height: 8),
+              _buildActivityRow(
+                'ویدئو کنفرانس',
+                user.totalVideoConferences ?? 0,
+                Icons.videocam,
+                Colors.red,
+              ),
+              const SizedBox(height: 8),
+              if (trends['conversation_video'] != null)
+                ActivityTrendChart(
+                  title: 'روند ویدئو کنفرانس در طول زمان',
+                  data: trends['conversation_video']!,
+                  color: Colors.red,
+                  icon: Icons.videocam,
+                ),
+
+              const Divider(height: 32),
+
+              // Learning Activities Section
+              Text(
+                'فعالیت‌های آموزشی',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  color: Colors.grey[700],
+                ),
+              ),
+              const SizedBox(height: 12),
+              _buildActivityRow(
+                'دوره‌های تکمیل شده',
+                user.totalCoursesCompleted ?? 0,
+                Icons.check_circle,
+                Colors.green,
+              ),
+              const SizedBox(height: 8),
+              if (trends['learning_completed'] != null)
+                ActivityTrendChart(
+                  title: 'روند تکمیل دوره‌ها در طول زمان',
+                  data: trends['learning_completed']!,
+                  color: Colors.green,
+                  icon: Icons.check_circle,
+                ),
+              const SizedBox(height: 8),
+              _buildActivityRow(
+                'دوره‌های در حال اجرا',
+                user.totalCoursesInProgress ?? 0,
+                Icons.play_circle,
+                Colors.blue,
+              ),
+              const SizedBox(height: 8),
+              if (trends['learning_inprogress'] != null)
+                ActivityTrendChart(
+                  title: 'روند دوره‌های در حال اجرا در طول زمان',
+                  data: trends['learning_inprogress']!,
+                  color: Colors.blue,
+                  icon: Icons.play_circle,
+                ),
+              const SizedBox(height: 8),
+              _buildScoreRow(
+                'میانگین نمره',
+                user.averageCourseScore ?? 0.0,
+                Icons.grade,
+                _getScoreColor(user.averageCourseScore ?? 0.0),
+              ),
+            ],
+          ),
+        );
+      },
+      loading: () => const Padding(
+        padding: EdgeInsets.all(32),
+        child: Center(child: CircularProgressIndicator()),
+      ),
+      error: (error, stack) => Padding(
+        padding: const EdgeInsets.all(16),
+        child: Text('خطا در بارگذاری نمودارها: $error'),
       ),
     );
   }
