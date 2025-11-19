@@ -46,17 +46,33 @@ class AnalyticsDashboardScreen extends ConsumerWidget {
               const SizedBox(height: 24),
 
               // نمودارهای دایره‌ای و میله‌ای
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: _buildActivityDistributionChart(ref),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: _buildSectionActivityChart(ref),
-                  ),
-                ],
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  if (constraints.maxWidth < 600) {
+                    // Mobile: Stack vertically
+                    return Column(
+                      children: [
+                        _buildActivityDistributionChart(ref),
+                        const SizedBox(height: 16),
+                        _buildSectionActivityChart(ref),
+                      ],
+                    );
+                  } else {
+                    // Tablet/Desktop: Side by side
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: _buildActivityDistributionChart(ref),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: _buildSectionActivityChart(ref),
+                        ),
+                      ],
+                    );
+                  }
+                },
               ),
 
               const SizedBox(height: 24),
@@ -134,42 +150,64 @@ class AnalyticsDashboardScreen extends ConsumerWidget {
 
     return summaryAsync.when(
       data: (summary) {
-        return GridView.count(
-          crossAxisCount: 4,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-          childAspectRatio: 1.5,
-          children: [
-            StatsCard(
-              title: 'کل کاربران',
-              value: summary.totalUsers.toString(),
-              icon: Icons.people,
-              color: Colors.blue,
-            ),
-            StatsCard(
-              title: 'کاربران فعال',
-              value: summary.activeUsers.toString(),
-              icon: Icons.person_outline,
-              color: Colors.green,
-              subtitle:
-                  '${((summary.activeUsers / summary.totalUsers) * 100).toStringAsFixed(1)}% از کل',
-            ),
-            StatsCard(
-              title: 'کل فعالیت‌ها',
-              value: summary.totalActivities.toString(),
-              icon: Icons.trending_up,
-              color: Colors.orange,
-            ),
-            StatsCard(
-              title: 'میانگین فعالیت',
-              value: summary.averageActivitiesPerUser.toStringAsFixed(1),
-              icon: Icons.bar_chart,
-              color: Colors.purple,
-              subtitle: 'به ازای هر کاربر',
-            ),
-          ],
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            // Build stats cards list
+            final cards = [
+              StatsCard(
+                title: 'کل کاربران',
+                value: summary.totalUsers.toString(),
+                icon: Icons.people,
+                color: Colors.blue,
+              ),
+              StatsCard(
+                title: 'کاربران فعال',
+                value: summary.activeUsers.toString(),
+                icon: Icons.person_outline,
+                color: Colors.green,
+                subtitle:
+                    '${((summary.activeUsers / summary.totalUsers) * 100).toStringAsFixed(1)}% از کل',
+              ),
+              StatsCard(
+                title: 'کل فعالیت‌ها',
+                value: summary.totalActivities.toString(),
+                icon: Icons.trending_up,
+                color: Colors.orange,
+              ),
+              StatsCard(
+                title: 'میانگین فعالیت',
+                value: summary.averageActivitiesPerUser.toStringAsFixed(1),
+                icon: Icons.bar_chart,
+                color: Colors.purple,
+                subtitle: 'به ازای هر کاربر',
+              ),
+            ];
+
+            // Responsive layout
+            if (constraints.maxWidth < 600) {
+              // Mobile: Stack vertically to avoid complex width calculations
+              return Column(
+                children: cards
+                    .map((card) => Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: card,
+                        ))
+                    .toList(),
+              );
+            } else {
+              // Tablet/Desktop: Use GridView
+              int crossAxisCount = constraints.maxWidth < 900 ? 3 : 4;
+              return GridView.count(
+                crossAxisCount: crossAxisCount,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                childAspectRatio: 1.5,
+                children: cards,
+              );
+            }
+          },
         );
       },
       loading: () => const Center(

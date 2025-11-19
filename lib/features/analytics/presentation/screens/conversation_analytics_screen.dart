@@ -264,20 +264,31 @@ class ConversationAnalyticsScreen extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: 4),
-              Row(
+              Wrap(
+                spacing: 12,
+                runSpacing: 4,
                 children: [
-                  Icon(Icons.message, size: 12, color: Colors.grey[600]),
-                  const SizedBox(width: 4),
-                  Text(
-                    '${contact.messageCount} پیام',
-                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.message, size: 12, color: Colors.grey[600]),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${contact.messageCount} پیام',
+                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 12),
-                  Icon(Icons.access_time, size: 12, color: Colors.grey[600]),
-                  const SizedBox(width: 4),
-                  Text(
-                    'آخرین: $dateString',
-                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.access_time, size: 12, color: Colors.grey[600]),
+                      const SizedBox(width: 4),
+                      Text(
+                        'آخرین: $dateString',
+                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                      ),
+                    ],
                   ),
                 ],
               ),

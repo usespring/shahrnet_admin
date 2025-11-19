@@ -86,30 +86,60 @@ class EmployeeDetailScreen extends ConsumerWidget {
                 const SizedBox(height: 16),
 
                 // Scores
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildScoreCard(
-                        context,
-                        'خطر ترک',
-                        employee.dropOffRiskScore,
-                        employee.riskLevel.displayName,
-                        _getRiskColor(employee.dropOffRiskScore),
-                        Icons.warning_amber_rounded,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _buildScoreCard(
-                        context,
-                        'مشارکت',
-                        employee.engagementScore,
-                        employee.engagementLevel.displayName,
-                        _getEngagementColor(employee.engagementScore),
-                        Icons.trending_up,
-                      ),
-                    ),
-                  ],
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    if (constraints.maxWidth < 400) {
+                      // Very small mobile: Stack vertically
+                      return Column(
+                        children: [
+                          _buildScoreCard(
+                            context,
+                            'خطر ترک',
+                            employee.dropOffRiskScore,
+                            employee.riskLevel.displayName,
+                            _getRiskColor(employee.dropOffRiskScore),
+                            Icons.warning_amber_rounded,
+                          ),
+                          const SizedBox(height: 12),
+                          _buildScoreCard(
+                            context,
+                            'مشارکت',
+                            employee.engagementScore,
+                            employee.engagementLevel.displayName,
+                            _getEngagementColor(employee.engagementScore),
+                            Icons.trending_up,
+                          ),
+                        ],
+                      );
+                    } else {
+                      // Side by side
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: _buildScoreCard(
+                              context,
+                              'خطر ترک',
+                              employee.dropOffRiskScore,
+                              employee.riskLevel.displayName,
+                              _getRiskColor(employee.dropOffRiskScore),
+                              Icons.warning_amber_rounded,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _buildScoreCard(
+                              context,
+                              'مشارکت',
+                              employee.engagementScore,
+                              employee.engagementLevel.displayName,
+                              _getEngagementColor(employee.engagementScore),
+                              Icons.trending_up,
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                  },
                 ),
                 const SizedBox(height: 16),
 

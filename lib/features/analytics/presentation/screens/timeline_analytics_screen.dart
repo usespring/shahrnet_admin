@@ -312,27 +312,42 @@ class TimelineAnalyticsScreen extends ConsumerWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 4),
-              Row(
+              Wrap(
+                spacing: 12,
+                runSpacing: 4,
                 children: [
-                  Icon(Icons.visibility, size: 12, color: Colors.grey[600]),
-                  const SizedBox(width: 4),
-                  Text(
-                    post.viewsCount.toString(),
-                    style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.visibility, size: 12, color: Colors.grey[600]),
+                      const SizedBox(width: 4),
+                      Text(
+                        post.viewsCount.toString(),
+                        style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 12),
-                  Icon(Icons.thumb_up, size: 12, color: Colors.grey[600]),
-                  const SizedBox(width: 4),
-                  Text(
-                    post.likesCount.toString(),
-                    style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.thumb_up, size: 12, color: Colors.grey[600]),
+                      const SizedBox(width: 4),
+                      Text(
+                        post.likesCount.toString(),
+                        style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 12),
-                  Icon(Icons.comment, size: 12, color: Colors.grey[600]),
-                  const SizedBox(width: 4),
-                  Text(
-                    post.commentsCount.toString(),
-                    style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.comment, size: 12, color: Colors.grey[600]),
+                      const SizedBox(width: 4),
+                      Text(
+                        post.commentsCount.toString(),
+                        style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                      ),
+                    ],
                   ),
                 ],
               ),
