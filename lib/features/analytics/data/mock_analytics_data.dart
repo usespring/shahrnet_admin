@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:shamsi_date/shamsi_date.dart';
 import '../../../core/models/user_activity.dart';
 import '../../../core/models/analytics_data.dart';
 
@@ -40,8 +39,6 @@ class MockAnalyticsData {
     'تایم‌لاین',
     'آموزش',
     'پیام‌ها',
-    'تقویم',
-    'تنظیمات',
   ];
 
   // عنوان‌های نمونه برای پست‌ها

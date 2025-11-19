@@ -1,6 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 import '../../../../core/models/analytics_data.dart';
 

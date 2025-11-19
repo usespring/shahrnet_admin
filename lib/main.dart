@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'features/analytics/presentation/screens/analytics_dashboard_screen.dart';
+import 'features/analytics/presentation/screens/analytics_main_screen.dart';
 import 'features/analytics/presentation/screens/user_activity_screen.dart';
 
 void main() {
@@ -50,7 +50,7 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _screens = const [
-    AnalyticsDashboardScreen(),
+    AnalyticsMainScreen(),
     UserActivityScreen(),
   ];
 
@@ -69,9 +69,9 @@ class _MainScreenState extends State<MainScreen> {
             labelType: NavigationRailLabelType.all,
             destinations: const [
               NavigationRailDestination(
-                icon: Icon(Icons.dashboard_outlined),
-                selectedIcon: Icon(Icons.dashboard),
-                label: Text('داشبورد'),
+                icon: Icon(Icons.analytics_outlined),
+                selectedIcon: Icon(Icons.analytics),
+                label: Text('تحلیل و بررسی'),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.people_outline),
