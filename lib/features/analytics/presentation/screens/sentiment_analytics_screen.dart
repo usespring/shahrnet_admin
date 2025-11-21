@@ -183,9 +183,15 @@ class SentimentAnalyticsScreen extends ConsumerWidget {
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 4.0),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(entry.key),
+                              Expanded(
+                                child: Text(
+                                  entry.key,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
                               Text(
                                 entry.value.toString(),
                                 style: const TextStyle(
@@ -452,8 +458,14 @@ class SentimentAnalyticsScreen extends ConsumerWidget {
                             style: const TextStyle(fontSize: 20),
                           ),
                           const SizedBox(width: 8),
-                          Text(entry.key.displayName),
-                          const Spacer(),
+                          Expanded(
+                            child: Text(
+                              entry.key.displayName,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
                           Text(
                             entry.value.toStringAsFixed(0),
                             style: const TextStyle(fontWeight: FontWeight.bold),
@@ -510,12 +522,16 @@ class SentimentAnalyticsScreen extends ConsumerWidget {
               children: [
                 Icon(Icons.format_quote, color: color, size: 20),
                 const SizedBox(width: 8),
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: color,
-                        fontWeight: FontWeight.bold,
-                      ),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: color,
+                          fontWeight: FontWeight.bold,
+                        ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             ),
