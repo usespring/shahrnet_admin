@@ -24,19 +24,16 @@ class SentimentGaugeWidget extends StatelessWidget {
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 24),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  level.emoji,
-                  style: const TextStyle(fontSize: 64),
-                ),
-                const SizedBox(width: 24),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final isCompact = constraints.maxWidth < 180;
+                final infoColumn = Column(
+                  crossAxisAlignment:
+                      isCompact ? CrossAxisAlignment.center : CrossAxisAlignment.start,
                   children: [
                     Text(
                       level.displayName,
+                      textAlign: isCompact ? TextAlign.center : TextAlign.start,
                       style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -44,30 +41,76 @@ class SentimentGaugeWidget extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text(
                       'نمره: ${_formatScore(score)}',
+                      textAlign: isCompact ? TextAlign.center : TextAlign.start,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             color: Colors.grey,
                           ),
                     ),
                   ],
-                ),
-              ],
+                );
+
+                if (isCompact) {
+                  return Column(
+                    children: [
+                      Text(
+                        level.emoji,
+                        style: const TextStyle(fontSize: 64),
+                      ),
+                      const SizedBox(height: 16),
+                      infoColumn,
+                    ],
+                  );
+                }
+
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      level.emoji,
+                      style: const TextStyle(fontSize: 64),
+                    ),
+                    const SizedBox(width: 24),
+                    Expanded(child: infoColumn),
+                  ],
+                );
+              },
             ),
             const SizedBox(height: 24),
             // Horizontal sentiment gauge
             _buildHorizontalGauge(context),
             const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'منفی 😢',
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                Text(
-                  'مثبت 😄',
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ],
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final labels = [
+                  Text(
+                    'منفی 😢',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  Text(
+                    'مثبت 😄',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ];
+
+                if (constraints.maxWidth < 120) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      labels[0],
+                      const SizedBox(height: 4),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: labels[1],
+                      ),
+                    ],
+                  );
+                }
+
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: labels,
+                );
+              },
             ),
           ],
         ),

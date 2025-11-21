@@ -548,18 +548,19 @@ class SentimentAnalyticsScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 8),
-            Row(
+            Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 8,
+              runSpacing: 8,
               children: [
                 Text(
                   content.sentimentLevel.emoji,
                   style: const TextStyle(fontSize: 20),
                 ),
-                const SizedBox(width: 8),
                 Text(
                   content.sentimentLevel.displayName,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
-                const Spacer(),
                 Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 4),

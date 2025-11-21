@@ -345,44 +345,51 @@ class _PeerSurveyScreenState extends ConsumerState<PeerSurveyScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: MoodLevel.values.map((mood) {
-                final isSelected = _selectedMood == mood;
-                return InkWell(
-                  onTap: () => setState(() => _selectedMood = mood),
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: isSelected ? Colors.blue[50] : null,
-                      border: Border.all(
-                        color: isSelected ? Colors.blue : Colors.grey[300]!,
-                        width: 2,
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: MoodLevel.values.map((mood) {
+                  final isSelected = _selectedMood == mood;
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: InkWell(
+                      onTap: () => setState(() => _selectedMood = mood),
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: isSelected ? Colors.blue[50] : null,
+                          border: Border.all(
+                            color: isSelected ? Colors.blue : Colors.grey[300]!,
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              mood.emoji,
+                              style: TextStyle(
+                                fontSize: isSelected ? 40 : 32,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              mood.displayName,
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: isSelected
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Column(
-                      children: [
-                        Text(
-                          mood.emoji,
-                          style: TextStyle(
-                            fontSize: isSelected ? 40 : 32,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          mood.displayName,
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontWeight:
-                                isSelected ? FontWeight.bold : FontWeight.normal,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
+                  );
+                }).toList(),
+              ),
             ),
             const SizedBox(height: 16),
             TextField(
