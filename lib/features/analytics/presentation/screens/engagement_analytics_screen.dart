@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/engagement_analytics_providers.dart';
 import '../widgets/analytics_section_header.dart';
+import '../widgets/date_range_filter.dart';
 import 'employee_risk_list_screen.dart';
 import 'manager_support_list_screen.dart';
 
@@ -15,6 +16,21 @@ class EngagementAnalyticsScreen extends ConsumerWidget {
     final insightsAsync = ref.watch(engagementInsightsProvider);
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('مشارکت و خطر'),
+        actions: [
+          const DateRangeFilter(),
+          const SizedBox(width: 8),
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            tooltip: 'بروزرسانی',
+            onPressed: () {
+              ref.invalidate(engagementAnalyticsProvider);
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
+      ),
       body: RefreshIndicator(
         onRefresh: () async {
           ref.invalidate(engagementAnalyticsProvider);

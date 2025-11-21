@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'features/analytics/presentation/screens/analytics_main_screen.dart';
 import 'features/analytics/presentation/screens/user_activity_screen.dart';
-import 'features/analytics/presentation/screens/peer_survey_screen.dart';
+import 'features/analytics/presentation/screens/engagement_analytics_screen.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -53,7 +53,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _screens = const [
     AnalyticsMainScreen(),
     UserActivityScreen(),
-    PeerSurveyScreen(currentUserId: 'user_1'), // Demo user ID
+    EngagementAnalyticsScreen(),
   ];
 
   @override
@@ -79,9 +79,9 @@ class _MainScreenState extends State<MainScreen> {
             label: 'کاربران',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.rate_review_outlined),
-            activeIcon: Icon(Icons.rate_review),
-            label: 'نظرسنجی',
+            icon: Icon(Icons.people_alt_outlined),
+            activeIcon: Icon(Icons.people_alt),
+            label: 'مشارکت و خطر',
           ),
         ],
       ),
