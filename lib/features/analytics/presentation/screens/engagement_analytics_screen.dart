@@ -295,7 +295,7 @@ class EngagementAnalyticsScreen extends ConsumerWidget {
                   leading: CircleAvatar(
                     backgroundColor: _getRiskColor(employee.dropOffRiskScore),
                     child: Text(
-                      employee.userName.substring(0, 1),
+                      _getInitial(employee.userName),
                       style: const TextStyle(color: Colors.white),
                     ),
                   ),
@@ -343,6 +343,14 @@ class EngagementAnalyticsScreen extends ConsumerWidget {
     if (score < 40) return Colors.green;
     if (score < 70) return Colors.orange;
     return Colors.red;
+  }
+
+  String _getInitial(String name) {
+    final trimmed = name.trim();
+    if (trimmed.isEmpty) {
+      return '?';
+    }
+    return trimmed.substring(0, 1);
   }
 
   IconData _getInsightIcon(type) {

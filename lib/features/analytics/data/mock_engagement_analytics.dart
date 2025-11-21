@@ -546,9 +546,17 @@ class MockEngagementAnalytics {
       final managerName = '${_firstNames[_random.nextInt(_firstNames.length)]} ${_lastNames[_random.nextInt(_lastNames.length)]}';
 
       // Assign team members to this manager
-      final teamStartIndex = i * managersPerTeam;
-      final teamEndIndex = ((i + 1) * managersPerTeam).clamp(0, employees.length);
-      final teamMembers = employees.sublist(teamStartIndex, teamEndIndex);
+      final startRaw = i * managersPerTeam;
+      final teamStartIndex =
+          startRaw > employees.length ? employees.length : startRaw;
+      final rawEndIndex = (i + 1) * managersPerTeam;
+      final cappedEnd =
+          rawEndIndex > employees.length ? employees.length : rawEndIndex;
+      final teamEndIndex =
+          cappedEnd < teamStartIndex ? teamStartIndex : cappedEnd;
+      final teamMembers = teamStartIndex >= employees.length
+          ? <EmployeeRiskProfile>[]
+          : employees.sublist(teamStartIndex, teamEndIndex);
 
       // Calculate manager supportiveness score
       final baseScore = 50 + _random.nextDouble() * 40; // 50-90

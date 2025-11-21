@@ -109,7 +109,7 @@ class _UserActivityScreenState extends ConsumerState<UserActivityScreen> {
         leading: CircleAvatar(
           backgroundColor: Colors.blue.shade100,
           child: Text(
-            user.userName.substring(0, 1),
+            _getInitial(user.userName),
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.blue,
@@ -477,6 +477,14 @@ class _UserActivityScreenState extends ConsumerState<UserActivityScreen> {
         ),
       ],
     );
+  }
+
+  String _getInitial(String name) {
+    final trimmed = name.trim();
+    if (trimmed.isEmpty) {
+      return '?';
+    }
+    return trimmed.substring(0, 1);
   }
 
   Color _getScoreColor(double score) {

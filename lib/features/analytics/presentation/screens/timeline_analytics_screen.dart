@@ -179,37 +179,31 @@ class TimelineAnalyticsScreen extends ConsumerWidget {
           subtitle: 'پرطرفدارترین پست‌ها در این بازه زمانی',
           icon: Icons.star,
         ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(
-              child: _buildTopPostsList(
-                context,
-                'پربازدیدترین',
-                analytics.topPostsByViews,
-                Icons.visibility,
-                Colors.green,
-              ),
+            _buildTopPostsList(
+              context,
+              'پربازدیدترین',
+              analytics.topPostsByViews,
+              Icons.visibility,
+              Colors.green,
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: _buildTopPostsList(
-                context,
-                'پرلایک‌ترین',
-                analytics.topPostsByLikes,
-                Icons.thumb_up,
-                Colors.pink,
-              ),
+            const SizedBox(height: 16),
+            _buildTopPostsList(
+              context,
+              'پرلایک‌ترین',
+              analytics.topPostsByLikes,
+              Icons.thumb_up,
+              Colors.pink,
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: _buildTopPostsList(
-                context,
-                'پرنظرترین',
-                analytics.topPostsByComments,
-                Icons.comment,
-                Colors.orange,
-              ),
+            const SizedBox(height: 16),
+            _buildTopPostsList(
+              context,
+              'پرنظرترین',
+              analytics.topPostsByComments,
+              Icons.comment,
+              Colors.orange,
             ),
           ],
         ),

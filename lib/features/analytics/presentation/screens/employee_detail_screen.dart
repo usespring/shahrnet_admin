@@ -41,7 +41,7 @@ class EmployeeDetailScreen extends ConsumerWidget {
                           backgroundColor:
                               _getRiskColor(employee.dropOffRiskScore),
                           child: Text(
-                            employee.userName.substring(0, 1),
+                            _getInitial(employee.userName),
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 32,
@@ -445,6 +445,14 @@ class EmployeeDetailScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  String _getInitial(String name) {
+    final trimmed = name.trim();
+    if (trimmed.isEmpty) {
+      return '?';
+    }
+    return trimmed.substring(0, 1);
   }
 
   Color _getRiskColor(double score) {
