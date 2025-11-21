@@ -66,64 +66,77 @@ class ConversationAnalyticsScreen extends ConsumerWidget {
           subtitle: 'آمار کلی پیام‌ها و تماس‌ها',
           icon: Icons.summarize,
         ),
-        GridView.count(
-          crossAxisCount: 4,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-          childAspectRatio: 1.5,
-          children: [
-            StatsCard(
-              title: 'پیام‌های مستقیم',
-              value: analytics.directMessagesSent.toString(),
-              icon: Icons.person,
-              color: Colors.blue,
-            ),
-            StatsCard(
-              title: 'پیام‌های گروهی',
-              value: analytics.groupMessagesSent.toString(),
-              icon: Icons.group,
-              color: Colors.green,
-            ),
-            StatsCard(
-              title: 'کل پیام‌ها',
-              value: analytics.totalMessagesSent.toString(),
-              icon: Icons.message,
-              color: Colors.purple,
-            ),
-            StatsCard(
-              title: 'تماس‌های صوتی',
-              value: analytics.audioCalls.toString(),
-              icon: Icons.phone,
-              color: Colors.orange,
-            ),
-            StatsCard(
-              title: 'ویدئو کنفرانس',
-              value: analytics.videoConferences.toString(),
-              icon: Icons.videocam,
-              color: Colors.red,
-            ),
-            StatsCard(
-              title: 'گفتگوهای فعال',
-              value: analytics.activeConversations.toString(),
-              icon: Icons.chat_bubble,
-              color: Colors.teal,
-            ),
-            StatsCard(
-              title: 'پیام‌های خوانده نشده',
-              value: analytics.unreadConversations.toString(),
-              icon: Icons.mark_chat_unread,
-              color: Colors.amber,
-            ),
-            StatsCard(
-              title: 'میانگین زمان پاسخ',
-              value: _formatResponseTime(analytics.averageResponseTimeMinutes),
-              icon: Icons.timer,
-              color: Colors.indigo,
-              subtitle: 'دقیقه',
-            ),
-          ],
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final width = constraints.maxWidth;
+            int crossAxisCount = 4;
+            double childAspectRatio = 1.5;
+
+            if (width < 768) {
+              crossAxisCount = 3;
+              childAspectRatio = width < 480 ? 1.2 : 1.4;
+            }
+
+            return GridView.count(
+              crossAxisCount: crossAxisCount,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              childAspectRatio: childAspectRatio,
+              children: [
+                StatsCard(
+                  title: 'پیام‌های مستقیم',
+                  value: analytics.directMessagesSent.toString(),
+                  icon: Icons.person,
+                  color: Colors.blue,
+                ),
+                StatsCard(
+                  title: 'پیام‌های گروهی',
+                  value: analytics.groupMessagesSent.toString(),
+                  icon: Icons.group,
+                  color: Colors.green,
+                ),
+                StatsCard(
+                  title: 'کل پیام‌ها',
+                  value: analytics.totalMessagesSent.toString(),
+                  icon: Icons.message,
+                  color: Colors.purple,
+                ),
+                StatsCard(
+                  title: 'تماس‌های صوتی',
+                  value: analytics.audioCalls.toString(),
+                  icon: Icons.phone,
+                  color: Colors.orange,
+                ),
+                StatsCard(
+                  title: 'ویدئو کنفرانس',
+                  value: analytics.videoConferences.toString(),
+                  icon: Icons.videocam,
+                  color: Colors.red,
+                ),
+                StatsCard(
+                  title: 'گفتگوهای فعال',
+                  value: analytics.activeConversations.toString(),
+                  icon: Icons.chat_bubble,
+                  color: Colors.teal,
+                ),
+                StatsCard(
+                  title: 'پیام‌های خوانده نشده',
+                  value: analytics.unreadConversations.toString(),
+                  icon: Icons.mark_chat_unread,
+                  color: Colors.amber,
+                ),
+                StatsCard(
+                  title: 'میانگین زمان پاسخ',
+                  value: _formatResponseTime(analytics.averageResponseTimeMinutes),
+                  icon: Icons.timer,
+                  color: Colors.indigo,
+                  subtitle: 'دقیقه',
+                ),
+              ],
+            );
+          },
         ),
       ],
     );

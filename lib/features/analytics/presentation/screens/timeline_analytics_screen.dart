@@ -65,64 +65,77 @@ class TimelineAnalyticsScreen extends ConsumerWidget {
           subtitle: 'آمار کلی فعالیت‌های تایم‌لاین',
           icon: Icons.summarize,
         ),
-        GridView.count(
-          crossAxisCount: 4,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-          childAspectRatio: 1.5,
-          children: [
-            StatsCard(
-              title: 'پست‌های منتشر شده',
-              value: analytics.postsComposed.toString(),
-              icon: Icons.post_add,
-              color: Colors.blue,
-            ),
-            StatsCard(
-              title: 'لایک‌ها',
-              value: analytics.likesGiven.toString(),
-              icon: Icons.thumb_up,
-              color: Colors.pink,
-            ),
-            StatsCard(
-              title: 'نظرات',
-              value: analytics.commentsWritten.toString(),
-              icon: Icons.comment,
-              color: Colors.orange,
-            ),
-            StatsCard(
-              title: 'بازدیدها',
-              value: analytics.postVisits.toString(),
-              icon: Icons.visibility,
-              color: Colors.green,
-            ),
-            StatsCard(
-              title: 'اشتراک‌گذاری‌ها',
-              value: analytics.shares.toString(),
-              icon: Icons.share,
-              color: Colors.purple,
-            ),
-            StatsCard(
-              title: 'شرکت در نظرسنجی',
-              value: analytics.pollParticipations.toString(),
-              icon: Icons.poll,
-              color: Colors.teal,
-            ),
-            StatsCard(
-              title: 'گزارشات',
-              value: analytics.reportsSubmitted.toString(),
-              icon: Icons.report,
-              color: Colors.red,
-            ),
-            StatsCard(
-              title: 'نرخ تعامل',
-              value: '${analytics.engagementRate.toStringAsFixed(1)}%',
-              icon: Icons.trending_up,
-              color: Colors.indigo,
-              subtitle: 'به ازای هر بازدید',
-            ),
-          ],
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final width = constraints.maxWidth;
+            int crossAxisCount = 4;
+            double childAspectRatio = 1.5;
+
+            if (width < 768) {
+              crossAxisCount = 3;
+              childAspectRatio = width < 480 ? 1.2 : 1.4;
+            }
+
+            return GridView.count(
+              crossAxisCount: crossAxisCount,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              childAspectRatio: childAspectRatio,
+              children: [
+                StatsCard(
+                  title: 'پست‌های منتشر شده',
+                  value: analytics.postsComposed.toString(),
+                  icon: Icons.post_add,
+                  color: Colors.blue,
+                ),
+                StatsCard(
+                  title: 'لایک‌ها',
+                  value: analytics.likesGiven.toString(),
+                  icon: Icons.thumb_up,
+                  color: Colors.pink,
+                ),
+                StatsCard(
+                  title: 'نظرات',
+                  value: analytics.commentsWritten.toString(),
+                  icon: Icons.comment,
+                  color: Colors.orange,
+                ),
+                StatsCard(
+                  title: 'بازدیدها',
+                  value: analytics.postVisits.toString(),
+                  icon: Icons.visibility,
+                  color: Colors.green,
+                ),
+                StatsCard(
+                  title: 'اشتراک‌گذاری‌ها',
+                  value: analytics.shares.toString(),
+                  icon: Icons.share,
+                  color: Colors.purple,
+                ),
+                StatsCard(
+                  title: 'شرکت در نظرسنجی',
+                  value: analytics.pollParticipations.toString(),
+                  icon: Icons.poll,
+                  color: Colors.teal,
+                ),
+                StatsCard(
+                  title: 'گزارشات',
+                  value: analytics.reportsSubmitted.toString(),
+                  icon: Icons.report,
+                  color: Colors.red,
+                ),
+                StatsCard(
+                  title: 'نرخ تعامل',
+                  value: '${analytics.engagementRate.toStringAsFixed(1)}%',
+                  icon: Icons.trending_up,
+                  color: Colors.indigo,
+                  subtitle: 'به ازای هر بازدید',
+                ),
+              ],
+            );
+          },
         ),
       ],
     );

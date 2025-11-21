@@ -66,55 +66,68 @@ class LearnAnalyticsScreen extends ConsumerWidget {
           subtitle: 'آمار کلی پیشرفت یادگیری',
           icon: Icons.summarize,
         ),
-        GridView.count(
-          crossAxisCount: 4,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-          childAspectRatio: 1.5,
-          children: [
-            StatsCard(
-              title: 'دوره‌های تکمیل شده',
-              value: analytics.completedCourses.toString(),
-              icon: Icons.check_circle,
-              color: Colors.green,
-            ),
-            StatsCard(
-              title: 'دوره‌های در حال اجرا',
-              value: analytics.inProgressCourses.toString(),
-              icon: Icons.play_circle,
-              color: Colors.blue,
-            ),
-            StatsCard(
-              title: 'میانگین نمره',
-              value: analytics.averageScore.toStringAsFixed(1),
-              icon: Icons.grade,
-              color: Colors.amber,
-              subtitle: 'از ۱۰۰',
-            ),
-            StatsCard(
-              title: 'نرخ تکمیل',
-              value: '${analytics.completionRate.toStringAsFixed(1)}%',
-              icon: Icons.trending_up,
-              color: Colors.purple,
-              subtitle: 'دوره‌های شروع شده',
-            ),
-            StatsCard(
-              title: 'زمان یادگیری',
-              value: '${(analytics.totalLearningTimeMinutes / 60).toStringAsFixed(1)}',
-              icon: Icons.timer,
-              color: Colors.orange,
-              subtitle: 'ساعت',
-            ),
-            StatsCard(
-              title: 'کل دوره‌ها',
-              value: analytics.totalStartedCourses.toString(),
-              icon: Icons.library_books,
-              color: Colors.teal,
-              subtitle: 'شروع شده',
-            ),
-          ],
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final width = constraints.maxWidth;
+            int crossAxisCount = 4;
+            double childAspectRatio = 1.5;
+
+            if (width < 768) {
+              crossAxisCount = 3;
+              childAspectRatio = width < 480 ? 1.2 : 1.4;
+            }
+
+            return GridView.count(
+              crossAxisCount: crossAxisCount,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              childAspectRatio: childAspectRatio,
+              children: [
+                StatsCard(
+                  title: 'دوره‌های تکمیل شده',
+                  value: analytics.completedCourses.toString(),
+                  icon: Icons.check_circle,
+                  color: Colors.green,
+                ),
+                StatsCard(
+                  title: 'دوره‌های در حال اجرا',
+                  value: analytics.inProgressCourses.toString(),
+                  icon: Icons.play_circle,
+                  color: Colors.blue,
+                ),
+                StatsCard(
+                  title: 'میانگین نمره',
+                  value: analytics.averageScore.toStringAsFixed(1),
+                  icon: Icons.grade,
+                  color: Colors.amber,
+                  subtitle: 'از ۱۰۰',
+                ),
+                StatsCard(
+                  title: 'نرخ تکمیل',
+                  value: '${analytics.completionRate.toStringAsFixed(1)}%',
+                  icon: Icons.trending_up,
+                  color: Colors.purple,
+                  subtitle: 'دوره‌های شروع شده',
+                ),
+                StatsCard(
+                  title: 'زمان یادگیری',
+                  value: '${(analytics.totalLearningTimeMinutes / 60).toStringAsFixed(1)}',
+                  icon: Icons.timer,
+                  color: Colors.orange,
+                  subtitle: 'ساعت',
+                ),
+                StatsCard(
+                  title: 'کل دوره‌ها',
+                  value: analytics.totalStartedCourses.toString(),
+                  icon: Icons.library_books,
+                  color: Colors.teal,
+                  subtitle: 'شروع شده',
+                ),
+              ],
+            );
+          },
         ),
       ],
     );
